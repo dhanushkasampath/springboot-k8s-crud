@@ -18,17 +18,29 @@ spec:
           ports:
             - containerPort: 8081  # I believe this is the port that configured in application.yml file of docker
           env:   # Setting Environment Variables
-            - name: DB_HOST
-              value: mysql  # This value should get from configMap
+            - name: DB_HOST   # Setting Database host address from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: db-config  # Name given to the configMap yml file. metadata.name
+                  key: host
 
-            - name: DB_NAME
-              value: orderDemoDb   # This value should get from configMap
+            - name: DB_NAME   # Setting Database name from a ConfigMap
+              valueFrom:
+                configMapKeyRef:
+                  name: db-config   # Name given to the configMap yml file. metadata.name
+                  key: dbName
 
-            - name: DB_USERNAME
-              value: root    # This value should get from Secret
+            - name: DB_USERNAME   # Setting Database username from secrets
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-secrets   # Name given to the secrests yml file. metadata.name
+                  key: username
 
-            - name: DB_PASSWORD
-              value: root    # This value should get from Secret
+            - name: DB_PASSWORD   # Setting Database password from secrets
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-secrets   # Name given to the secrests yml file. metadata.name
+                  key: password
 
 ---
 

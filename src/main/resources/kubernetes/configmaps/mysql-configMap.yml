@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-config # name of the config map. this will available when we execute the command "kubectl get configmap"
+data:
+  host: mysql
+  dbName: orderDemoDb
