@@ -71,10 +71,11 @@ metadata:
     tier: database
 spec:
   ports:
-    - port: 3306
+    - protocol: TCP
+      port: 3306
       targetPort: 3306
+      nodePort: 30036
   selector:       # mysql Pod Should contain same labels
     app: mysql
     tier: database
-  clusterIP: None  # We Use DNS, Thus ClusterIP is not relevant
-# No service type is defined
+  type: NodePort  # I defined this since I want to connect to this instance from workbench
