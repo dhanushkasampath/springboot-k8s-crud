@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-crud-deployment # Name of the deployment
+spec:
+  selector:
+    matchLabels:
+      app: springboot-k8s-mysql  # He said this is selector
+  replicas: 3  # This will create 3 pods
+  template:
+    metadata:
+      labels:
+        app: springboot-k8s-mysql
+    spec:
+      containers:
+        - name: springboot-k8s-crud
+          image: springboot-k8s-crud:1.0 # docker image that needs to be used
+          ports:
+            - containerPort: 8081  # I believe this is the port that configured in application.yml file of docker
+          env:   # Setting Environment Variables
+            - name: DB_HOST
+              value: mysql  # This value should get from configMap
+
+            - name: DB_NAME
+              value: orderDemoDb   # This value should get from configMap
+
+            - name: DB_USERNAME
+              value: root    # This value should get from Secret
+
+            - name: DB_PASSWORD
+              value: root    # This value should get from Secret
+
+---
+
+apiVersion: v1 # Kubernetes API version
+kind: Service # Kubernetes resource kind we are creating
+metadata: # Metadata of the resource(name of the service) kind we are creating
+  name: springboot-crud-svc
+spec:
+  selector:
+    app: springboot-k8s-mysql
+  ports:
+    - protocol: "TCP"
+      port: 8080 # The port that the service is running on in the cluster
+      targetPort: 8081 # The port exposed by the service
+  type: NodePort # type of the service.
